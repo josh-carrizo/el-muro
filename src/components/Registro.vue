@@ -2,59 +2,62 @@
 <b-row>
     <b-col></b-col>
     <b-col>
-        <b-form @submit="CreateUser" @reset="onReset" v-if="show">
+        <!-- REGISTRO USUARIOS
+        <b-form @submit="CreateUser" @reset="onReset" v-if="show">-->
+        <b-form @submit.prevent="CreateUser"  v-if="show">
 
             <b-form-group id="input-group-1" label="Your Name:" label-for="input-1">
-                <b-form-input id="input-1" v-model="form.name" required        placeholder="Enter name"
+                <b-form-input id="input-1" v-model="formCreate.name" required   placeholder="Enter name"
                 ></b-form-input>
             </b-form-group>
 
             <b-form-group id="input-group-2" label="Email address:" label-for="input-2"   description="We'll never share your email with anyone else.">
-                <b-form-input id="input-2" v-model="form.email" type="email" required
+                <b-form-input id="input-2" v-model="formCreate.email" type="email" required
                 placeholder="Enter email">
                 </b-form-input>
             </b-form-group>
 
             <b-form-group id="input-group-3" label="Your Password:" label-for="input-3"  >
                 <b-form-input type="password" class="form-control" label-for="input-3"
-                    name="password" required v-model="password" placeholder="Enter your password">
+                    name="password" required v-model="formCreate.password" placeholder="Enter your password">
                 </b-form-input>
             </b-form-group>
 
             <b-form-group id="input-group-4" label="Repeat Your Password:" label-for="input-4"  >
                 <b-form-input type="password" class="form-control" label-for="input-4"
-                    name="RepeatPassword" required v-model="RepeatPassword" placeholder="Repeat your password">
+                    name="RepeatPassword" required v-model="formCreate.RepeatPassword" placeholder="Repeat your password">
                 </b-form-input>
             </b-form-group>
 
             <b-button type="submit" variant="primary">Create User</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
+            <!--<b-button type="reset" variant="danger">Reset</b-button>-->
         </b-form>
     </b-col>
     <b-col></b-col>
         <b-col>    
-        <!--Login-->    
-        <b-form @submit="Login" @reset="onReset" v-if="show">
+        <!--Login   
+        <b-form @submit="LogIn" @reset="onResetLogIn" v-if="show">-->
+        <b-form @submit.prevent="LogIn" v-if="show">
 
             <b-form-group id="input-group-1-login" label="Your Name:" label-for="input-1-login">
-                <b-form-input id="input-1-login" v-model="form.name" required        placeholder="Enter name"
+                <b-form-input id="input-1-login" v-model="formLogIn.name" required placeholder="Enter name"
                 ></b-form-input>
             </b-form-group>
 
-            <b-form-group id="input-group-2-login" label="Email address:" label-for="input-2-login"   description="We'll never share your email with anyone else.">
-                <b-form-input id="input-2-login" v-model="form.email" type="email" required
+            <b-form-group id="input-group-2-login" label="Email address:" label-for="input-2-login" >
+                <b-form-input id="input-2-login" v-model="formLogIn.email" type="email" required
                 placeholder="Enter email">
                 </b-form-input>
             </b-form-group>
 
-             <b-form-group>
-                <label>Password</label>
-                <input type="password" class="form-control" label-for="input-3-login"
-                    name="password" required v-model="password">
+             <b-form-group b-form-group id="input-group-3-login" label="Password:" label-for="input-3-login" >
+                <b-form-input type="password" class="form-control" label-for="input-3-login"
+                    name="password" required v-model="formLogIn.password" placeholder="Enter email">
+                </b-form-input>
             </b-form-group>
 
             <b-button type="submit" variant="primary">Log In</b-button>
-            <b-button type="reset" variant="danger">Reset</b-button>
+            <!--<b-button type="reset" variant="danger">Reset</b-button>-->
         </b-form>
         </b-col>
         <b-col></b-col>
@@ -69,47 +72,37 @@ export default {
     name:'Registro',
     data() {
         return{
-            form: {
-            password:'',
-            RepeatPassword:'',
-            email: '',
-            name: '',
+            formCreate: {
+                password:'',
+                RepeatPassword:'',
+                email: '',
+                name: '',
             },
+            formLogIn:{
+                name:'',
+                password:'',
+                email:''
+            },
+            
             show: true
         }
 
     },
-
     methods: {
         CreateUser() {
 
-            if(this.password != this.RepeatPassword){
+            if(this.formCreate.password != this.formCreate.RepeatPassword){
                 alert('Ambas contraseñas deben coincidir');
                 return;
 
-            }
-            const datos= {email:this.email, password: this.password}
+            } 
+            const datos= {name:this.formCreate.name, email:this.formCreate.email, password: this.formCreate.password}
             this.$store.dispatch('registerAction',datos)
 
-            console.log('User Created')
         },
-            /*firebase
-                .auth()
-                .createUserWithEmailAndPassword(this.form.RegisterEmail, this.form.RegisterPassword)
-                .then(data => {
-                data.user
-                    .updateProfile({
-                    displayEmail: this.form.email
-                    })
-                    .then(() => {});
-                })
-                .catch(err => {
-                this.error = err.message;
-                });
-                    
-        },*/
         LogIn(){
             console.log('Login user')
+           
 
         },
         
@@ -124,21 +117,26 @@ export default {
                 });
         },*/
 
-        },
+        }/*,
         onReset(evt) {
             evt.preventDefault()
             // Reset our form values
 
-            this.form.email = ''
-            this.form.name = ''
-            this.form.password = ''
-            this.form.RepeatPassword = ''
-            // Trick to reset/clear native browser form validation state
-            this.show = false
-            this.$nextTick(() => {
-            this.show = true
-            })
-        }
+            this.formCreate.email = '';
+            this.formCreate.name = '';
+            this.formCreate.password = '';
+            this.formCreate.RepeatPassword = '';
+
+        },
+        onResetLogIn(evt) {
+            evt.preventDefault()
+            // Reset our form values
+
+            this.formLogIn.email = '';
+            this.formLogIn.name = '';
+            this.formLogIn.password = '';
+
+        },*/
 }
 
 

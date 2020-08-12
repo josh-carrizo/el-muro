@@ -57,11 +57,16 @@ const store = new Vuex.Store({
           context.commit('setUser',null);
         })
     },
-    /*logInUser(context, datos){
-      firebase.auth()
-        .signInWithEmailAndPassword(datos.email, datos.password)
-        
-    }*/
+    logOut(context){
+      firebase
+      .auth()
+      .signOut()
+        .then(() => {
+          context.commit('setError', null);
+          context.commit('setUser', null);
+          router.push('Registro')
+        })
+      }
 
       
   }

@@ -58,11 +58,5 @@ export default {
   text-align: center;
   color: black;
 }
-body{
-			font-family:arial,Georgia,Serif;
-			background-image: -webkit-linear-gradient(left, #ee24007a 50%, rgb(0, 0, 0));
-			background-image: -o-linear-gradient(left, #ee24007a 50%, rgb(0, 0, 0));
-			background-image: linear-gradient(to right, #ee24007a 50%, rgb(0, 0, 0));	
 
-}
 </style>

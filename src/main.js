@@ -57,6 +57,22 @@ const store = new Vuex.Store({
           context.commit('setUser',null);
         })
     },
+    logIn(context, datos) {
+      firebase
+      .auth()
+      .signInWithEmailAndPassword(datos.email, datos.password)
+      .then(response => {
+        console.log(response)
+        context.commit('setError', null);
+        context.commit('setUser', response.user);
+        router.push('/Success');
+      })
+      .catch(error => {
+        context.commit('setError', error.message);
+        context.commit('setUser', null);
+      })
+    },
+
     logOut(context){
       firebase
       .auth()

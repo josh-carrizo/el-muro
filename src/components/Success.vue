@@ -1,3 +1,4 @@
+
 <template>
 <div>
   <h1 class="cabecera">Welcome </h1>
@@ -13,14 +14,23 @@
       <b-col></b-col>
       <b-col sm="8" md="8" lg="8" xl="8">
         <form @submit.prevent="addPost">
-        <b-form-textarea v-model="addTxt"
-          id="textarea-auto-height"
-          placeholder="Write here..."
-          rows="3"
-          max-rows="8"
-          required
-        ></b-form-textarea>
-        <div>
+          <b-form-textarea v-model="addTxt"
+            id="textarea-auto-height"
+            placeholder="Write here..."
+            rows="3"
+            max-rows="8"
+            required
+          ></b-form-textarea>          
+          <div class="mt-3">Selected file: {{ file ? file.name : '' }}</div>
+          
+          <b-form-file
+            v-model="file"
+            :state="Boolean(file)"
+            placeholder="Choose a file or drop it here..."
+            drop-placeholder="Drop file here..."
+          ></b-form-file>
+          <div>
+          <br>
           <b-button type="submit" block variant="dark">Add Post</b-button>
         </div>
         </form>
@@ -35,9 +45,9 @@
       <b-col sm="8" md="8" lg="8" xl="8"  >
 
         <b-card 
-          img-src='https://discfactory.es/wp-content/uploads/2018/11/man-user-300x300.png'
-          img-alt="Card image" 
-          img-right 
+            img-src= "!post.img ? 'https://image.shutterstock.com/image-vector/ui-image-placeholder-wireframes-apps-260nw-1037719204.jpg' : post.img"
+            img-alt="Card image"
+            img-right 
           v-for="post in posts" 
           :key="post.id">
           <b-card-text>
@@ -49,7 +59,9 @@
             <div class="secondary-content">
               <a href="#" @click.prevent="like(post.id)" class="secondary-content"><img src="https://media0.giphy.com/media/eBkJkl71tvsJirkaCC/source.gif" alt="Pulgar arriba" class="Pulgar">  
               </a>
-              <div><h6 class="display-5 likes">{{post.likes}} Likes</h6></div>
+              <div>
+                <h6 class="display-5 likes">{{post.likes}} Likes</h6>
+              </div>
             </div>
           </template>
         </b-card>
@@ -75,7 +87,8 @@ export default {
     data() {
       return {
         addTxt: '',
-        posts:[]
+        posts:[],
+        file: null
 
       }
     },
@@ -125,7 +138,6 @@ export default {
   width:5rem;
   height:6rem;
 }
-
-
-
 </style>
+
+

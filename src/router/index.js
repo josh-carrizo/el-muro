@@ -1,3 +1,4 @@
+
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import firebase from 'firebase/app';
@@ -40,6 +41,7 @@ const router = new VueRouter({
         component: NotFound
       }
     ]
+
   })
 
   router.beforeEach((to, from, next) => {
@@ -54,3 +56,4 @@ const router = new VueRouter({
   })
   
   export default router;
+

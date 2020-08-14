@@ -184,7 +184,4 @@ export default {
 .text-white{
     color:white
 }
-
-
-
 </style>

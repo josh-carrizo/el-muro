@@ -1,13 +1,16 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
+import firebase from 'firebase/app';
 
 import Home from '@/components/Home.vue'
+import PrincipalConexion from '@/components/PrincipalConexion.vue'
 import Registro from '@/components/Registro.vue';
 import Success from '@/components/Success.vue';
 import NotFound from '@/components/NotFound.vue';
+
 Vue.use(VueRouter);
 
-export default new VueRouter({
+const router = new VueRouter({
     routes: [
       {
         path: '/', 
@@ -17,13 +20,20 @@ export default new VueRouter({
       {
         path: '/register', 
         component: Registro,
-        props: true,
+        name:'register'
+       
       },
       {        
-        path:'/Success/:id',
+        path:'/Success',
         component: Success,
         name: 'Success',
-        props: true
+        
+      },
+      {
+        path:'/cx',
+        component:PrincipalConexion,
+        name:'cx',
+        
       },
       {
         path: '*', 
@@ -31,3 +41,16 @@ export default new VueRouter({
       }
     ]
   })
+
+  router.beforeEach((to, from, next) => {
+
+    let currentUser = firebase.auth().currentUser;
+    
+    if (to.meta.requiresAuth && currentUser == null) {
+      next('/register')
+    } else {
+      next()
+    }
+  })
+  
+  export default router;

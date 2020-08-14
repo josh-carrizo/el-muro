@@ -80,7 +80,7 @@ const store = new Vuex.Store({
         .then(() => {
           context.commit('setError', null);
           context.commit('setUser', null);
-          router.push('Registro')
+          router.push('/register')
         })
       }
 

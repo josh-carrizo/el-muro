@@ -5,19 +5,20 @@ import '@babel/polyfill'
 import 'mutationobserver-shim'
 
 import firebase from 'firebase/app'
+import 'firebase/auth';
 import VueFirestore from 'vue-firestore';
 import './firebase.js'
-import 'firestore/auth'
+
 
 import './plugins/bootstrap-vue'
 import App from './App.vue'
-import router from '@/router';
+import router from './router';
 
+Vue.use(VueFirestore, {key: 'id'});      // adding this use statement
 
 Vue.config.productionTip = false
 Vue.use(Vuex)
 
-Vue.use(VueFirestore, {key: 'id'});      // adding this use statement
 
 const store = new Vuex.Store({
   state:{
@@ -26,37 +27,62 @@ const store = new Vuex.Store({
   },
   mutations:{
     setUser(state, newUser){
-      state.userId = newUser;
+      state.User = newUser;
     },
     setError(state, newError) {
         state.error = newError;
     }
 },
   actions: {
-    async registerAction(context, datos) {
-        try {
-            await firebase
-            .auth()
-            .createUserWithEmailAndPassword(datos.email, datos.password)
-
-            .then(function (response) {
-              console.log(response);
-              context.commit('setError', null);
-              context.commit('setUser', datos.email);
-              router.push('/');
-            })
-
-            
-
-        }  
-        catch (error) {
+    registerAction(context, datos) {
+      firebase.auth()
+        .createUserWithEmailAndPassword(datos.email, datos.password)
+        .then(function (response) {
+          console.log(response);
+          // si el registro es exitoso, entonces le agrego el nombre
+          firebase.auth().currentUser.updateProfile({
+            displayName: datos.name
+          })
+        })
+        
+        .then(function (response) {
+          console.log(response);
+          context.commit('setError', null);
+          context.commit('setUser', {email: datos.email, name:datos.name});
+          router.push('/');
+        })
+        .catch ((error) => {
           console.log(error);
           context.commit('setError', error.message);
           context.commit('setUser',null);
-        
-        
-        }
-    }
+        })
+    },
+    logIn(context, datos) {
+      firebase
+      .auth()
+      .signInWithEmailAndPassword(datos.email, datos.password)
+      .then(response => {
+        console.log(response)
+        context.commit('setError', null);
+        context.commit('setUser', response.user);
+        router.push('/Success');
+      })
+      .catch(error => {
+        context.commit('setError', error.message);
+        context.commit('setUser', null);
+      })
+    },
+
+    logOut(context){
+      firebase
+      .auth()
+      .signOut()
+        .then(() => {
+          context.commit('setError', null);
+          context.commit('setUser', null);
+          router.push('Registro')
+        })
+      }
 
       
   }
